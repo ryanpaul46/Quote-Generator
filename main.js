@@ -7,14 +7,21 @@ const quoteText = document.getElementById('quote-text'),
 
 
   function randomQuote(){
-    fetch('https://api.quotable.io/random')
+    fetch('/api/v1/quotes', {
+      headers: {
+        'X-Api-Key': '9x9R97s43j9wHJDf+zt8iA==PbXTYlKK9CW9bvxl'
+      }
+    })
         .then(response => response.json())
         .then(data => {
-          quoteText.textContent = data.content;
-          quoteTags.textContent = data.tags;
-          quoteAuthor.textContent = `--${data.author}`; 
-        });
-
+          if (data && data.length > 0) {
+            const quoteData = data[0];
+            quoteText.textContent = quoteData.quote;
+            // API does not provide tags; optionally use category: quoteTags.textContent = quoteData.category;
+            quoteAuthor.textContent = `-- ${quoteData.author}`;
+          }
+        })
+        .catch(error => console.error('Error fetching quote:', error));
   }
 randomQuote();
 genQuoteBtn.addEventListener('click', () =>{
